@@ -1,8 +1,6 @@
 package leetcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class word_break_139 {
     // DFS bad，solution_DFS_bad
@@ -88,6 +86,48 @@ public class word_break_139 {
             return false;
         }
     }
+
+    // BFS搜索
+    static class solution_BFS
+    {
+        public static boolean wordBreak(String s, List<String> wordDict)
+        {
+            return bfs(s, wordDict);
+        }
+        public static boolean bfs(String s, List<String> wordDict)
+        {
+            // 创建队列
+            Queue<Integer> q = new LinkedList<>();
+            // visited数组
+            boolean[] visited = new boolean[s.length() + 1];
+            q.add(0);
+            while(! q.isEmpty())
+            {
+                int start = q.poll();
+                System.out.println("Now start is " + start);
+                // visited[start] = true;
+                for (String word : wordDict)
+                {
+                    int next_start = start + word.length();
+                    if(next_start > s.length() || visited[next_start])
+                    {
+                        continue;
+                    }
+                    if(s.indexOf(word, start) == start) //从start位置可以匹配到word
+                    {
+                        if(next_start == s.length())
+                        {
+                            return true;
+                        }
+                        q.add(next_start);
+                        visited[next_start] = true; //修改访问
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
     // 测试用main
     public static void main(String[] args)
     {
@@ -100,7 +140,12 @@ public class word_break_139 {
         // 用例2
 //        String s= "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab";
 //        List<String> wordD = Arrays.asList("a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa");
+
+        // 用例3
+//        String s = "catsandog";
+//        List<String> wordD = Arrays.asList("cats","dog","sand","and","cat");
+
         System.out.println(s.length());
-        System.out.println(solution_DFS_cutting.wordBreak(s,wordD));
+        System.out.println(solution_BFS.wordBreak(s,wordD));
     }
 }
