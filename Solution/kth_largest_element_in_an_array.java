@@ -1,6 +1,5 @@
 // site: https://leetcode-cn.com/problems/kth-largest-element-in-an-array/
 
-// 快排枢轴法
 class Solution {
     public int findKthLargest(int[] nums, int k) 
     {
@@ -11,7 +10,11 @@ class Solution {
         if(rear > head)
         {
             // 设置左右位置和枢值
-            int i = head, j = rear, key = nums[head];
+            int i = head, j = rear; 
+            Random rand = new Random();
+            int key_pos = head + rand.nextInt(rear - head + 1); //随机选择枢轴
+            swap(nums, key_pos, head); // 与head交换，将交换后序列的head作为枢轴
+            int key = nums[head];
             while(j > i)
             {
                 while(j > i && nums[j] <= key)
@@ -46,6 +49,12 @@ class Solution {
             }
         }
         return nums[head];
+    }
+    public void swap(int[] arr, int i, int j)
+    {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }
 
