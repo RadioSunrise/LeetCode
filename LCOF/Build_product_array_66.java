@@ -1,18 +1,20 @@
 //site: https://leetcode-cn.com/problems/gou-jian-cheng-ji-shu-zu-lcof/
 
-public class Solution {
-    public int[] multiply(int[] A) {
-        int n = A.length;
+class Solution {
+    public int[] constructArr(int[] a) {
+        int n = a.length;
         int[] b = new int[n];
         int temp = 1;
-        for(int i = 0; i < n; i++){
+        for(int i = 0; i < n; i++)
+        {
             b[i] = temp;
-            temp = temp * A[i];
+            temp = temp * a[i];
         }
         temp = 1;
-        for(int i = n-1; i >= 0; i--){
+        for(int i = n-1; i>=0; i--)
+        {
             b[i] = b[i] * temp;
-            temp = temp * A[i];
+            temp = temp * a[i];
         }
         return b;
     }
