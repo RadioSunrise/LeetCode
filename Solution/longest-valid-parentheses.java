@@ -61,3 +61,29 @@ class Solution {
 }
 // https://leetcode-cn.com/problems/longest-valid-parentheses/solution/shou-hua-tu-jie-zhan-de-xiang-xi-si-lu-by-hyj8/
 // 关键：栈底元素的设计是最后一个未匹配的右括号的下标
+
+
+// 动态规划法
+// dp含义：dp[i]表示以i结尾的括号匹配的长度，因为匹配串一定是右括号结尾的，所以所有左括号的i的dp一定是0
+// 转移方程：两种情况(1)."()" 和 (2)."))"，1.如果"()"的话，则dp[i] = dp[i-2] + 2
+//                                        2.如果"))"的话，根据dp[i-1]来，如果s[i-1]结尾的子串的 *前一个* 是'('，那么dp[i] = dp[i-1] + 2 + dp[i-[i-1]-2]
+//                                          dp[i-[i-1]-2]i-1子串的前2位，就是要匹配的左括号的前面 
+class Solution_dp {
+    public int longestValidParentheses(String s) {
+        int max = 0;
+        int[] dp = new int[s.length()]; // dp[i]表示以下标i字符结尾的最长有效括号的长度，如果s[i]=='('，则dp[i]=0
+        for(int i = 1; i < s.length(); i++){
+            //遇到右括号再考虑转移，左括号的dp必定为0
+            if(s.charAt(i) == ')'){
+                if(s.charAt(i - 1) == '('){ // 转移的两种情况 -- 1.如果是"()"
+                    dp[i] = ((i >= 2) ? dp[i - 2] : 0) + 2;
+                }
+                else if(i - dp[i - 1] > 0 && s.charAt(i - dp[i-1] - 1) == '('){ // 2.如果是"）),且以i-1为结尾的匹配的前一个为("
+                    dp[i] = dp[i - 1] + ((i - dp[i-1]) >= 2 ? dp[i -dp[i-1]-2] : 0) + 2;
+                }
+                max = Math.max(dp[i], max);
+            }
+        }
+        return max;
+    }
+}
