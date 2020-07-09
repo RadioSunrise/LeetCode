@@ -3,6 +3,39 @@ package leetcode;
 import java.util.*;
 
 public class word_break_139 {
+    
+    // dp
+    // dp[i]表示从s[0, ..., i-1]是否可以分割，boolean
+    // dp[i]为true的条件是，考虑s[0, ..., i-1]的分割点j，s[0, ..., j-1] 和 s[j, ..., i-1]可以被分割
+    // 即dp[j] == true且s[j, ..., i-1]是一个词
+    class Solution_dp {
+        public boolean wordBreak(String s, List<String> wordDict) {
+            Set<String> wordDictSet = new HashSet<>();
+            int max_word_len = 0;
+            for(String word : wordDict){
+                wordDictSet.add(word);
+                if(word.length() > max_word_len)
+                {
+                    max_word_len = word.length();
+                }
+            }
+            boolean[] dp = new boolean[s.length() + 1];
+            dp[0] = true;
+            for(int i = 1; i < dp.length; i++){
+                // 优化剪枝，j从尾部开始，判断到最长的单词长度的位置就可以了
+                for(int j = i; j >= 0 && j >= i - max_word_len; j--){
+                    // dp[i]是[0,...,i-1]
+                    // 用HashSet来判断s[j, ..., i-1]是不是一个词
+                    if(dp[j] && wordDictSet.contains(s.substring(j,i))){
+                        dp[i] = true;
+                    }
+                }
+            }
+            return (dp[s.length()]);
+        }
+    }
+
+
     // DFS bad，solution_DFS_bad
     // 没有考虑剪枝和重复计算的问题，会超时
     static class solution_DFS_bad
