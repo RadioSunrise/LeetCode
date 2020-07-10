@@ -10,7 +10,7 @@ class Solution {
         }
         // 如果k >= n/2, 跟k = +Infinity是一样的
         // 因为一次合理的交易至少要两天(一天买一天卖且卖出价大于买入价)
-        if(k >= (n >>> 2))
+        if(k >= (n >>> 1))
         {
             int dp_i_0 = 0;
             int dp_i_1 = Integer.MIN_VALUE;
