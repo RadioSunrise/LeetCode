@@ -64,6 +64,7 @@ class Solution {
 // 简单版的一遍扫描
 // 因为可以连续买卖，所以把每一段上升线都加进去，考虑相邻的两个点累加就可以了
 // 在斜坡上爬升并持续增加从连续交易中获得的利润，而不是在谷之后寻找每个峰值
+// 并没有真正地买入和卖出，只是等价的做法
 class Solution {
     public int maxProfit(int[] prices) {
         int sum = 0;
