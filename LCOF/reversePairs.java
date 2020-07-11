@@ -16,6 +16,13 @@
           
 // 归并思想的解法
 // 如果两边排序完之后，发现是不需要合并的，即nums[mid]<=nums[mid+1]，则可以提早退出
+// 不一定是右边出队时候统计，左边出队的时候统计也是可以的，但是要考虑右边数组用完的情况
+// 如果右边数组用完了，那么左边出队就要把右边的加上
+
+// 总结：1.左有序数组每一个元素出队 -> 加上右边已经出队过的数量
+//       2.右有序数组每一个元素出队 -> 加上左边还没出队的数量
+// 两种选一种，两种都考虑就重复计算了
+
 class Solution {
     public int reversePairs(int[] nums) {
         int n = nums.length;
@@ -54,6 +61,7 @@ class Solution {
         while(i <= l_rear && j <= r_rear){
             if(nums[i] <= nums[j]){ //算逆序数，右边严格大于左边才算
                 temp[k++] = nums[i++];
+                // count += (j - r_head);
             }
             else{
                 temp[k++] = nums[j++];
@@ -63,6 +71,10 @@ class Solution {
         }
         while(i <= l_rear){
             temp[k++] = nums[i++];
+            // 如果是根据前有序数组发生归并时来增加逆序数
+            // 当右有序数组用完的时候，左边出队就要加上右边全部的数量
+            // 因为当前右边出过的数量 = 右边的全部
+            // count += r_rear - r_head + 1;
         }
         while(j <= r_rear){
             temp[k++] = nums[j++];
