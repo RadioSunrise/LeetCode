@@ -1,0 +1,18 @@
+// site: https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/
+
+// 可以用HashSet也可以用个boolean数组
+class Solution {
+    public int findRepeatNumber(int[] nums) {
+        boolean[] record = new boolean[nums.length];
+        // Arrays.fill(record, false);
+        for(int i : nums){
+            if(record[i] == true){
+                return i;
+            }
+            else{
+                record[i] = true;
+            }
+        }
+        return -1;
+    }
+}
