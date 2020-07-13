@@ -95,3 +95,36 @@ class Solution {
         return Arrays.copyOfRange(result, 0, index);
     }
 }
+
+// 排序的做法
+// 当两个数组都是有序的时候，用两个指针i和
+// 如果nums1[i] == nums2[j] -> 存入结果
+// nums1[i]小，i++
+// nums2[j]小，j++
+// 直到其中一个指针越界
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        // 排序的做法
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        int i = 0, j = 0, k = 0;
+        int[] result = new int[Math.min(n1, n2)];
+        while (i < n1 && j < n2){
+            if (nums1[i] == nums2[j]){
+                result[k] = nums1[i];
+                k++;
+                i++;
+                j++;
+            }
+            else if (nums1[i] < nums2[j]){
+                i++;
+            }
+            else {
+                j++;
+            }
+        }
+        return Arrays.copyOfRange(result, 0, k);
+    }
+}
