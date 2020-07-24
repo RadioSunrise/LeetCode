@@ -1,0 +1,27 @@
+// site: https://leetcode-cn.com/problems/jian-sheng-zi-ii-lcof/submissions/
+
+// 剪绳子ii，和第一题不同需要考虑溢出的问题
+class Solution {
+    public int cuttingRope(int n) {
+        if(n == 2){
+            return 1;
+        }
+        if(n == 3){
+            return 2;
+        }
+        int mod = 1000000007;
+        // 和上一题不同，需要考虑大数溢出的问题，如果直接在上一题的写法下加上 mod 1e9+7会出错
+        // 以下用贪心算法实现，每次都分成3，不够3就分成2
+        // 所以大于4的部分可以直接除以3，而剩下4就分成2和2
+        // 用long类型来保存结果，因为指数增长得很快
+        long result = 1;
+        // 设置成n > 4可以保证最后循环结束时，n = 2 / 3 / 4，而不会等于1 
+        while(n > 4){
+            result = result * 3;
+            result = result % mod;
+            n = n-3;
+        }
+        // 循环结束时 n = 2 / 3 / 4都可以直接乘到res
+        return (int)((result * n) % mod);
+    }
+}
