@@ -1,5 +1,33 @@
 // site: https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/
 
+// 原地hash，因为数据的取值范围和长度都是n，所以每个数字nums[i]和应该放的位置i是一一对应的
+// 遍历数组，发现不在应该在的位置就叫交换，交换回来的数字也可能不在正确的位置，所以用while
+class Solution {
+    public int findRepeatNumber(int[] nums) {
+        int len = nums.length;
+        for(int i = 0; i < len; i++){
+            // System.out.println(Arrays.toString(nums));
+            // 如果当前的数 nums[i] 没有在下标为 i 的位置上，就把它交换到下标 i 上
+            // 交换回来的数字可能没有放在合适的位置，所以继续做交换，用while 而不是 if
+            while(nums[i] != i){
+                // 如果发现nums[i]要放的位置已经有nums[i]了
+                // 找到重复
+                if(nums[i] == nums[nums[i]]){
+                    return nums[i];
+                }
+                swap(nums, i, nums[i]);
+            }
+        }
+        return -1;
+    }
+    public void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+// HashSet 方法 O(n)
 // 可以用HashSet也可以用个boolean数组
 class Solution {
     public int findRepeatNumber(int[] nums) {
