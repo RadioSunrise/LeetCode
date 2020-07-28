@@ -12,29 +12,41 @@
 // 例如 p w w w k e w
 // end指针遇到第2个w的时候，start会跳到上一次w出现位置的下一个位置，即移动到2
 // 而不会直接移动k的位置
+
+// 用left和right代替start和end
 class Solution {
     public int lengthOfLongestSubstring(String s) {
-        if(s.equals(""))
-        {
+        if(s.equals("")){
             return 0;
         }
-        int s_len = s.length();
+        // Sliding Window + HashMap 记录出现位置
+        int len = s.length();
+        HashMap<Character, Integer> map = new HashMap<>(len);
+        // 最长长度至少为1
         int max = 1;
-        int start = 0;
-        int end = 0;
-        // 字符 -- 出现的位置
-        HashMap<Character, Integer> map = new HashMap<>();
-        for(; end < s_len; end++){
-            // 遇到出现过的字符
-            if(map.containsKey(s.charAt(end))){
-                // 遇到出现过的字符
-                // start向右移动，移动到和s[end]相同字符的后1个位置
-                start = Math.max(start, map.get(s.charAt(end)) + 1);
+        // 窗口左右边界
+        int left = 0;
+        int right = 0;
+        int index = 01;
+        // right到达字符串末尾即结束
+        for(; right < len; right++){
+            char c = s.charAt(right);
+            // 当前字符在map是否有出现
+            // 出现过
+            if(map.containsKey(c)){
+                // 左边界移动，移动到出现过的位置的下一个位置
+                index = map.get(c);
+                // left移动要保证准备移动的位置比left大，否则会往回走
+                // 如 abba，到第二次遇到a，此时left为2，而准备上一次出现的a位置的下一个位置是1
+                // 即希望移动到1，是不对的
+                left = Math.max(left, index + 1);
             }
-            map.put(s.charAt(end), end); //放入map和更新下标
-            max = Math.max(max, end - start + 1);
+            // 更新map的出现下标
+            map.put(c, right);
+            // 挑战最大值，每一次right增加都要挑战最大值，不是只有在发现重复的时候才挑战
+            // 否则如果s完全不相等就会出错
+            max = Math.max(max, right - left + 1);
         }
         return max;
     }
 }
-
