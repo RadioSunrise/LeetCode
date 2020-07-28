@@ -63,3 +63,45 @@ class Solution {
         return prev;
     }
 }
+
+// end从start出发，走n-1步也可以的，循环条件和更新条件要改
+// 循环条件改成end != null，更新条件改成end = start
+public ListNode reverseKGroupFromStart(ListNode head, int k) {
+        if(k <= 1){
+            return head;
+        }
+        // dummy 是虚拟头部，方便使用
+        // prev 指针指向已翻转的段的结尾
+        // start 指针指向待翻转段的开头
+        // end 指针指向待翻转段的结尾
+        // next 指针指向下一段需要翻转的开头
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode prev = dummy;
+        ListNode start = head;
+        ListNode end = head;
+        ListNode next = null;
+        while(end != null){
+            // end从start出发，走k-1步
+            for(int i = 0; i < k-1 && end != null; i++){
+                end = end.next;
+            }
+            // end走到null了
+            if(end == null){
+                break;
+            }
+            // next记录end的后继
+            next = end.next;
+            // [start, end]从原链中断开
+            end.next = null;
+            // 翻转start到end，翻转完之后的链表接到prev后面
+            prev.next = reversePart(start);
+            // 翻转完之后start指向新的结尾
+            start.next = next;
+            // 更新prev, start, end
+            prev = start;
+            start = prev.next;
+            end = start;
+        }
+        return dummy.next;
+    }
