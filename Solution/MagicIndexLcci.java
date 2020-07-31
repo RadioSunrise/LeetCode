@@ -37,3 +37,27 @@ class Solution {
         return rightMagic;
     }
 }
+
+// 利用非降序序列特性优化直接遍历
+class Solution {
+    public int findMagicIndex(int[] nums) {
+        // 优化遍历
+        int i = 0;
+        while(i < nums.length){
+            if(nums[i] == i){
+                return i;
+            }
+            // 如果nums[i] 严格大于 i，则 i 跳到nums[i]
+            // 因为序列是非递减序列，所以当nums[i] > i，魔法索引的位置必定不在[i, nums[i])内
+            // 所以i直接跳转到nums[i]，减少必定不满足条件的判断
+            if(nums[i] > i){
+                i = nums[i];
+            }
+            else{
+                i++;
+            }
+
+        }
+        return -1;
+    }
+}
