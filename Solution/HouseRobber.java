@@ -9,6 +9,30 @@
 // 选1和2中比较大的情况
 // 因为只跟前两个状态有关，所有用两个变量存着就可以了，不用开一个数组
 
+// 改得好一点
+class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if(n == 0){
+            return 0;
+        }
+        if(n == 1){
+            return nums[0];
+        }
+        int curr = 0; // dp[i] 和 dp[i - 1]
+        int prev = 0; // dp[i - 2]
+        int temp;
+        for(int num : nums){
+            // 暂存curr
+            temp = curr;
+            curr = Math.max(prev + num, curr);
+            prev = temp;
+        }
+        return curr;
+    }
+}
+
+// 旧版本
 class Solution {
     public int rob(int[] nums) {
         int n = nums.length;
