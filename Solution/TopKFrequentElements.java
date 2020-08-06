@@ -111,3 +111,56 @@ public class TopKFrequentElements {
 
 
 // 用最大堆也是可以的，把各个不同的元素放进堆里，然后调整，然后删除前K个就可以了
+
+
+// 桶排序
+// 桶排序的思想：出现的次数是有范围的[0,n]共n+1个可能，所以开一个n+1大小的桶，将相同出现频率的元素加到一个桶里，然后按频率从大到小收集
+class Solution {
+    /**
+     * 桶排序来做
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int[] topKFrequent(int[] nums, int k){
+        // 结果
+        List<Integer> res = new ArrayList<>();
+        // HashMap做字典统计出现次数
+        // key: 数字，value：出现次数
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num : nums){
+            if(map.containsKey(num)){
+                map.put(num, map.get(num) + 1);
+            }
+            else {
+                map.put(num, 1);
+            }
+        }
+        // 桶排序
+        // 第一趟，将频次作为下标，将数字集合存入对应的出现频率的桶中
+        // 出现次数的范围：[0 -- n]
+        List<Integer>[] list = new List[nums.length + 1];
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()){
+            int key = entry.getKey();
+            int index = entry.getValue();
+            // 该桶还没创建list
+            if(list[index] == null){
+                list[index] = new ArrayList<>();
+            }
+            list[index].add(key);
+        }
+        // 倒序添加进res里面
+        for(int i = list.length - 1; i >= 0 && res.size() < k; i--){
+            // 为空就跳过
+            if(list[i] == null){
+                continue;
+            }
+            res.addAll(list[i]);
+        }
+        int[] newRes = new int[res.size()];
+        for(int i = 0; i < res.size(); i++){
+            newRes[i] = res.get(i);
+        }
+        return newRes;
+    }
+}
