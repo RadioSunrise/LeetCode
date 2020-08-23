@@ -28,3 +28,25 @@ class Solution {
         return m << shiftCount;
     }
 }
+
+// 通过抹去n后面的1来进行前缀的求解
+// Brian Kernighan 算法
+class Solution {
+    public int rangeBitwiseAnd(int m, int n) {
+        if(m == 0 || n == 0){
+            return 0;
+        }
+        if(m == n){
+            return m;
+        }
+        // 转化成找两个端点m和n的最长公共前缀
+        // 2.Brian Kernighan 算法
+        // 根据Brian Kernighan 算法，n & (n - 1)可以把n最后面的1消掉(变成0)
+        // 所以对n执行B.K算法，直到n小于等于m，那么n就是结果（即m和n的公共前缀）
+        while(n > m){
+            // n逐步抹去最右边的1
+            n = n & (n - 1);
+        }
+        return n;
+    }
+}
