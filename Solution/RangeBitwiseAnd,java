@@ -1,0 +1,30 @@
+// site: https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/submissions/
+
+// 从m到n按位与
+
+// 根据位操作与的特点，当一个数的某位置出现0，结果中这个位置是0
+// 因此问题转换成求[m...n]所有数的最长公共前缀，假设公共前缀长x位
+// 那个m是：x + 0hkij，n是：x + 1abcd，因为n >= m，即m的第x+1位是0，n的x+1位是1
+// 由于m -> n是累加的，所以从m增长到n的过程中，毕竟会出现x + 10000...，则结果中，x+1到末尾都是0
+// 所以最后问题转化成求解m和n的最长公共前缀即可，后面的位置填0（用左移来填0）
+
+// 时间复杂度O(logN)，即复杂度取决于n的二进制位数
+class Solution {
+    public int rangeBitwiseAnd(int m, int n) {
+        if(m == 0 || n == 0){
+            return 0;
+        }
+        // 转化成找两个端点m和n的最长公共前缀
+        // 1.通过位移来判断
+        // 一直右移到 m = n 为止，记录移动了多少位
+        int shiftCount = 0;
+        while(m != n){
+            m = m >> 1;
+            n = n >> 1;
+            shiftCount++;
+        }
+        // 这些位置填0
+        // 这个时候m和n都是公共前缀
+        return m << shiftCount;
+    }
+}
