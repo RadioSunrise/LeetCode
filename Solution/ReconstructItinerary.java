@@ -5,7 +5,9 @@
 
 // dfs来实现，关键在于什么时候将一个节点加入结果集，如果按照dfs的访问顺序来加入，第一次遇到孤岛节点（没有出度的节点），就会加入结果集
 // 但是走到孤岛节点之后就无法回到其他节点了，即不符合欧拉路径的要求，所以加入结果集的顺序应该采用逆序加入（首部插入），遇到孤岛节点放在当前结果路径的首部
-// 在最后顺序读取结果路径的时候，孤岛路径就在最后，则是正确的欧拉路径
+// 在最后顺序读取结果路径的时候，孤岛路径就在最后，则是正确的欧拉路径。
+// 当然也可以res.add(start)，最后再逆序
+// 由于半欧拉图和欧拉图的特性，这样的孤岛节点最多只会有1个，所以每一个节点，只会有一个死胡同节点
 // 过程中记得删除遍历过的行程
 
 // 第一版代码，需要对出度集进行排序
@@ -67,16 +69,14 @@ class Solution {
         // 一个HashMap，key是String，value用优先队列不同排序
         Map<String, PriorityQueue<String>> graph = new HashMap<>();
         for(List<String> path : tickets){
-            if(!graph.containsKey(path.get(0))){
-                // 没遇到过的出发点
-                PriorityQueue<String> queue = new PriorityQueue<>(); 
-                queue.add(path.get(1));
-                graph.put(path.get(0), queue);
+            String src = path.get(0);
+            String dest = path.get(1);
+            // 没遇到过的出发点
+            if (!graph.containsKey(src)) {
+                graph.put(src, new PriorityQueue<String>());
             }
-            else {
-                // 遇到过的，直接加入出度集
-                graph.get(path.get(0)).add(path.get(1));
-            }
+            // 加入图
+            graph.get(src).offer(dest);
         }
         // dfs
         dfs("JFK", graph, res);
