@@ -1,0 +1,45 @@
+// site: https://leetcode-cn.com/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/
+
+package leetcode;
+
+public class FindNthDigit {
+    public int findNthDigit(int n) {
+        if(0 <= n && n <= 9){
+            return n;
+        }
+        long base = 1;
+        long partNum = 9;
+        long sum = 0;
+        long m = n;
+        // 每一段中数字的长度 base
+        // 统计每一段的数字，找到m属于哪一个段
+        while(partNum * base + sum < m){
+            sum += base * partNum; base++;
+            partNum *= 10;
+        }
+        // 退出while说明n指向的这一位所属的数字长度 base
+        // index是在这一段中的第几个数, bitPos是这一个数的哪一位
+        long index = (m - sum) / base;
+        long bitPos = (m - sum) % base;
+
+        // 根据大小关系来判断
+        // bitPos说明是base位数的最后一个数，n指向的一定是最后一位
+        if(bitPos == 0){
+            // -1回到上一段的最后一个数
+            long num = (int)(Math.pow(10, base - 1)) + index - 1;
+            String numStr = String.valueOf(num);
+            // 最后一位是bit - 1
+            return (numStr.charAt((int)base - 1) - '0');
+        }
+        else {
+            long num = (int)(Math.pow(10, base - 1)) + index;
+            String numStr = String.valueOf(num);
+            return (numStr.charAt((int)bitPos - 1) - '0');
+        }
+    }
+    public static void main(String[] args){
+        int n = 187;
+        int res = new FindNthDigit().findNthDigit(n);
+        System.out.println(res);
+    }
+}
