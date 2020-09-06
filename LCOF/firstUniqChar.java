@@ -34,3 +34,27 @@ class Solution {
 
 
 // 2.有序的辅助存储 -- linkedHashMap
+class Solution {
+    public char firstUniqChar(String s) {
+        // 用 LinkedHashMap 来统计，LinkedHashMap是有序的
+        // 所以可以遍历hashMap来找第一次出现的
+        // 默认构造函数是按照插入顺序inserction order 来排序的
+        LinkedHashMap<Character, Boolean> linkMap = new LinkedHashMap<>();
+        char[] arr = s.toCharArray();
+        for(char c : arr){
+            if(!linkMap.containsKey(c)){
+                linkMap.put(c, true);
+            }
+            else {
+                linkMap.put(c, false);
+            }
+        }
+        // 因为linkMap是有序的，所以遍历的时间是固定的(26个小写字母，最多26次)
+        for(Map.Entry<Character, Boolean> entry : linkMap.entrySet()){
+            if(entry.getValue()){
+                return entry.getKey();
+            }
+        }
+        return ' ';
+    }
+}
