@@ -12,10 +12,11 @@ class Solution {
             return 0;
         }
         int left = leftRange(nums, target);
-        int right = rightRange(nums, target);
-        if(left == -1 && right == -1){
+        // 没找到提前返回，也不用找右边界了
+        if(left == -1){
             return 0;
         }
+        int right = rightRange(nums, target);
         return right - left + 1;
     }
 
