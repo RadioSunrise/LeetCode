@@ -109,6 +109,42 @@ public class TopKFrequentElements {
     }
 }
 
+// 用自带的堆
+public int[] topKFrequentHeap(int[] nums, int k) {
+        // HashMap保存出现的次数，用堆来获取结果
+        // key 数字，value 出现次数
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num : nums){
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        // 堆，Comparator用map中保存的出现次数来比较
+        PriorityQueue<Integer> heap = new PriorityQueue<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return map.get(o1) - map.get(o2);
+            }
+        });
+        // 遍历HashMap
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()){
+            int num = entry.getKey();
+            if(heap.size() < k){
+                heap.add(num);
+            }
+            // 大小为k
+            // 出现次数大于堆顶
+            else if(entry.getValue() > map.get(heap.peek())){
+                heap.poll();
+                heap.add(num);
+            }
+        }
+        // 取出最小堆的元素
+        int[] res = new int[heap.size()];
+        int i = 0;
+        while (!heap.isEmpty()){
+            res[i++] = heap.poll();
+        }
+        return res;
+    }
 
 // 用最大堆也是可以的，把各个不同的元素放进堆里，然后调整，然后删除前K个就可以了
 
