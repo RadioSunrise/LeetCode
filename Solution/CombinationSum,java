@@ -1,0 +1,65 @@
+// site: https://leetcode-cn.com/problems/combination-sum/submissions/
+
+// 组合总数问题，回溯 + 递归，关键细节：(1)用搜索起点begin去重，(2)排序之后方便剪枝（当期值不符合条件则后续值必定不符合条件）
+
+// 组合问题中，常用搜索起点begin指定顺序，按照某种顺序来搜索，来实现去重，因为组合本身不讲究顺序
+// 排列问题中，常用used数组来防止回到同一个位置，排列讲究顺序问题，记录那些数据已用过
+
+package leetcode;
+
+import java.util.*;
+
+/**
+ * 给定一个无重复元素的数组candidates和一个目标数target，找出candidates中所有可以使数字和为target的组合。
+ * candidates中的数字可以无限制重复被选取。candidates[i]和target都是正整数
+ */
+public class CombinationSum {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        // 排序，方便剪枝
+        Arrays.sort(candidates);
+        if (candidates[0] > target) {
+            return res;
+        }
+        Deque<Integer> path = new ArrayDeque<>();
+        // dfs有搜索起点
+        dfs(0, candidates, target, path, res);
+        return res;
+    }
+
+    /**
+     * 回溯dfs
+     *
+     * @param begin      搜索起点，从当前位置开始搜索，避免重复，关键
+     * @param candidates
+     * @param target
+     * @param path
+     * @param res
+     */
+    public void dfs(int begin, int[] candidates, int target, Deque<Integer> path, List<List<Integer>> res) {
+        // 递归结束条件
+        if (target == 0) {
+            res.add(new LinkedList<>(path));
+        }
+        for (int i = begin; i < candidates.length; i++) {
+            // 排序过的，如果当前数值已经比target大了，后面都不可能了
+            if (candidates[i] > target) {
+                return;
+            }
+            // 比target小，有可能构成答案
+            path.addLast(candidates[i]);
+            // 下一个的搜索起点begin是i
+            dfs(i, candidates, target - candidates[i], path, res);
+            // 回溯
+            path.removeLast();
+
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] nums = new int[]{3, 2, 5, 7};
+        int target = 7;
+        List<List<Integer>> res = new CombinationSum().combinationSum(nums, target);
+        System.out.println(res.toString());
+    }
+}
