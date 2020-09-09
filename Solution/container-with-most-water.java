@@ -14,7 +14,7 @@ class Solution {
             if (maxVal < capacity) {
                 maxVal = capacity;
             }
-            // 当其中一边的高度比较低，高度高的一边向高度低的靠近
+            // 当其中一边的高度比较低，高度低的指针移动，排除这个位置和其他位置的组合
             // 如height[left] < height[right]
             // 当right向left靠近，高度不会增加，宽度则会减少，因此装水的容量必定减少
             // 因此left和其他柱子（位于left和right之间）的组合都必定会比[left,right]的组合小
