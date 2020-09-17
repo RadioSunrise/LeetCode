@@ -1,5 +1,7 @@
 package leetcode;
 
+import java.util.Arrays;
+
 /**
  * 冗余连接
  * 第二题，有向图，给定的边N条，N个顶点的有根树是有N-1条边的，所以有一条多余的边
@@ -67,7 +69,7 @@ public class RedundantConnection2 {
 
         // 2.删除构成入度为2的边，看看是否形成环
         // 逆序查找
-        for(int i = n - 1; i >= 0; i++){
+        for(int i = n - 1; i >= 0; i--){
             if(inDegree[edges[i][1]] == 2){
                 // 如果这条边不构成环，那就是这条边了
                 if(!removeJudgeCircle(edges, n, i)){
@@ -102,11 +104,17 @@ public class RedundantConnection2 {
             if(i == removeEdgeIndex){
                 continue;
             }
-            if(!unionFind.union(edges[i][0], edges[i][0])){
+            if(!unionFind.union(edges[i][0], edges[i][1])){
                 // 合并失败，这条边构成了环
                 return true;
             }
         }
         return false;
+    }
+    public static void main(String[] args) {
+        int[][] edges = {{1, 2}, {2, 3}, {3, 1}, {1, 4}};
+        RedundantConnection2 solution = new RedundantConnection2();
+        int[] res = solution.findRedundantDirectedConnection(edges);
+        System.out.println(Arrays.toString(res));
     }
 }
