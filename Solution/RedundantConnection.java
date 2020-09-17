@@ -1,10 +1,10 @@
 package leetcode;
 
 /**
- * 冗余连接 
+ * 冗余连接
  * 第一题，无向图
  * 无向图找一条冗余边，把这条变删掉之后剩下的结果图是一棵有根树
- * 用并查集DSU来做
+ * 用并查集DSU来做，相当于在图中找有没有环
  */
 public class RedundantConnection {
     public int[] findRedundantConnection(int[][] edges) {
