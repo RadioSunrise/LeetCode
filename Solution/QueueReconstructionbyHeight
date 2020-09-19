@@ -1,8 +1,11 @@
-// site: https://leetcode-cn.com/problems/queue-reconstruction-by-height/
+package leetcode;
 
-// 假设有打乱顺序的一群人站成一个队列。 每个人由一个整数对(h, k)表示，其中h是这个人的身高，k是排在这个人前面且身高大于或等于h的人数。 编写一个算法来重建这个队列。
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
-class Solution {
+public class QueueReconstructionbyHeight {
     public int[][] reconstructQueue(int[][] people) {
         // 贪心法
         // 因为把矮的人插在高的人前面是不会影响高的人的k值的，所以对于同样高的人，以k为下标插入队伍
@@ -35,6 +38,7 @@ class Solution {
         }
         */
 
+        // 用toArray会快很多的，LinkedList内部通过node的next移动来实现toArray
         int n = people.length;
         return queue.toArray(new int[n][2]);
     }
