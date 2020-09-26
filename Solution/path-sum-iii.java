@@ -11,58 +11,36 @@
  */
  
  // 双重dfs的做法
- // 两个dfs，一个是当做root开始dfs，另一个是当做中间结点dfs
- // 注意两个dfs的调用结构
- // dfsRoot只调用dfsRoot（sum不减）, dfsMid只调用dfsMid（sum要减）
-class Solution {
+ // 两个dfs，一个是遍历树本身的mainDFS，另外一个是求路径总和的subDFS
+ // 注意两个dfs的调用结构，dfsRoot相当于是遍历树本身
+ class Solution {
     int count = 0;
     public int pathSum(TreeNode root, int sum) {
-        dfsRoot(root, sum);
+        mainInterval(root, sum);
         return count;
     }
-    
-
-    /**
-    * 以当前结点为dfs起点，从sum开始统计
-    */
-    public void dfsRoot(TreeNode root, int sum){
-        if(root == null){
-            return;
-        }
-        
-        /*
-        // 这个点val等于路径和，直接+1返回
-        if(root.val == sum){
-            count++;
-            return;
-        }
-        */
-        // 本结点dfsMid
-        dfsMid(root, sum);
-
-        // 对左右子树都进行dfsRoor
-        dfsRoot(root.left, sum);
-        dfsRoot(root.right, sum);
-
-    }
-
-    /**
-    * 以当前结点为路径中间点, 从sumRemaind继续做
-    */
-    public void dfsMid(TreeNode node, int sumRemaind){
+    public void mainInterval(TreeNode node, int sum){
         if(node == null){
             return;
         }
-        sumRemaind -= node.val;
-        // 加上这个点就满足了，+1返回
-        if(sumRemaind == 0){
-            count++;
-            // System.out.println("mid find, node is " + node.val);
-            // return;
+        // 处理本节点
+        subInterval(node, sum);
+        // 遍历到左右节点
+        mainInterval(node.left, sum);
+        mainInterval(node.right, sum);
+    }
+    /**
+    * sub遍历，和路径总和II一样的递归
+    */
+    public void subInterval(TreeNode node, int remainSum){
+        if(node == null){
+            return;
         }
-        // 对左右子树继续remaind
-        dfsMid(node.left, sumRemaind);
-        dfsMid(node.right, sumRemaind);
+        if(remainSum == node.val){
+            count++;
+        }
+        subInterval(node.left, remainSum - node.val);
+        subInterval(node.right, remainSum - node.val);
     }
 }
 
