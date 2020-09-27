@@ -1,0 +1,73 @@
+// site: https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 
+// 二叉排序树的最近公共祖先
+
+// 因为是BST，所以能够通过节点的val值来判断p和q相对于当前点node的左右子树分布位置
+// 和二叉树（不一定是BST）的最近公共祖先相比比较方便
+
+// 和最近祖先一样的做法，用了递归，其实可以改成迭代的形式
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return ancestor(root, p, q);
+    }
+    /**
+    * 利用BST的特性
+    */
+    public TreeNode ancestor(TreeNode node, TreeNode p, TreeNode q){
+        // 递归结束条件
+        // p和q中的一个
+        if(node == p){
+            return p;
+        }
+        if(node == q){
+            return q;
+        }
+        // 分属两边，通过val判断
+        if((node.val > p.val && node.val < q.val) || (node.val < p.val && node.val > q.val)){
+            return node;
+        }
+        // 都在左边或者右边，则递归
+        if((node.val > p.val) && (node.val > q.val) && node.left != null){
+            return ancestor(node.left, p, q);
+        }
+        if((node.val < p.val) && (node.val < q.val) && node.right != null){
+            return ancestor(node.right, p, q);
+        }
+        return null;
+    }
+}
+
+// 迭代的形式
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode node = root;
+        while(node != null){
+            // node就是p和q的其中一个
+            if(node == p || node == q){
+                return node;
+            }
+            // 分属两边，返回node
+            if((node.val < p.val && node.val > q.val) || (node.val > p.val && node.val < q.val)){
+                return node;
+            }
+            // 在同一边，则移动
+            if(node.val > p.val && node.val > q.val){
+                node = node.left;
+            }
+            if(node.val < p.val && node.val < q.val){
+                node = node.right;
+            }
+        }
+        return node;
+    }
+}
