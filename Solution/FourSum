@@ -74,10 +74,87 @@ public class FourSum {
             path.removeLast();
         }
     }
+    
+    /**
+     * 双指针法，从三数之和改过来的
+     * @param nums
+     * @param target
+     * @return
+     */
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        if(nums.length < 4){
+            return res;
+        }
+        // 排序
+        Arrays.sort(nums);
+        int n = nums.length;
+        // 两重循环枚举两个数，用双指针枚举剩下的两个数
+        // first loop
+        for(int i = 0; i < n - 3; i++){
+            // 去重
+            if (i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+            // 连续4个都太大了，直接break
+            if(nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3] > target){
+                break;
+            }
+            // 当前数加上最大的三个都太小，移动到下一个
+            if(nums[i] + nums[n - 1] + nums[n - 2] + nums[n - 3] < target){
+                continue;
+            }
+            // second loop
+            for(int j = i + 1; j < n - 2; j++){
+                // 去重
+                if(j > i + 1 && nums[j] == nums[j - 1]){
+                    continue;
+                }
+                if(nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > target){
+                    break;
+                }
+                if(nums[i] + nums[j] + nums[n - 1] + nums[n - 2] < target){
+                    continue;
+                }
+                // 双指针代替最后两重循环
+                int left = j + 1;
+                int right = n - 1;
+                while(left < right){
+                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if(sum ==  target){
+                        res.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        // 找到一组解也要继续移动
+                        while (left < right && nums[left] == nums[left + 1]){
+                            left++;
+                        }
+                        // while退出的时候left还是指着一个相同的值，要再移动一次
+                        left++;
+                        while (left < right && nums[right] == nums[right - 1]){
+                            right--;
+                        }
+                        right--;
+                    }
+                    else if(sum < target){
+                        while (left < right && nums[left] == nums[left + 1]){
+                            left++;
+                        }
+                        left++;
+                    }
+                    else {
+                        while (left < right && nums[right] == nums[right - 1]){
+                            right--;
+                        }
+                        right--;
+                    }
+                }
+            }
+        }
+        return res;
+    }
     public static void main(String[] args){
         int[] nums = new int[]{1,-2,-5,-4,-3,3,3,5};
         FourSum solution = new FourSum();
-        List<List<Integer>> res = solution.fourSumBackTrack(nums, -11);
+        List<List<Integer>> res = solution.fourSum(nums, -11);
         System.out.println(res.toString());
     }
 }
