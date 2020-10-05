@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class FourSum {
     /**
-     * 回溯法，很慢
+     * 回溯法
      * @param nums
      * @param target
      * @return
@@ -24,7 +24,7 @@ public class FourSum {
         }
         // 排序，剪枝
         Arrays.sort(nums);
-        dfs(0, nums, target, path, res);
+        dfs(0, nums, 0, target, path, res);
         return res;
     }
 
@@ -32,36 +32,45 @@ public class FourSum {
      * dfs 回溯
      * @param begin 从begin开始，防止重复
      * @param nums
+     * @param sum 当前path中的累加值
      * @param target
      * @param path
      * @param res
      */
-    public void dfs(int begin, int[] nums, int target, Deque<Integer> path, List<List<Integer>> res){
+    public void dfs(int begin, int[] nums, int sum, int target, Deque<Integer> path, List<List<Integer>> res){
         // 结束条件，只要等于4个都会return的
         if(path.size() == 4){
-            if(target == 0){
+            if(sum == target){
                 res.add(new LinkedList<>(path));
             }
             // 剩余target不等于0也会return
             return;
         }
-        // begin太大或者剩下的数字不够
-        if(begin >= nums.length || ((4 - path.size()) > (nums.length - begin))){
-            return;
-        }
+
         for(int i = begin; i < nums.length; i++){
-            // i要大于begin，因为控制的是本层的选择
+            // 剪枝1，剩下的数字不够
+            if((4 - path.size()) > (nums.length - begin)){
+                return;
+            }
+            // 去重，i要大于begin，因为控制的是本层的选择，
             if(i > begin && (nums[i] == nums[i - 1])){
                 continue;
             }
-            // 已经排好序了，如果当前nums[i]>0其大于target，那么后续的数都不能加入结果集
-            if(nums[i] >= 0 && nums[i] > target){
-                System.out.println("bigger");
+
+            // 根据数值大小进行的剪枝
+            // 剩下中最大和最小是已知的，即nums[i + 1]和nums[n - 1]，选完这个数字之和，考虑两种情况
+            // 1.剩下的数字加起来都不够target，则这个数字不够大，要选一个大一点的，即往后跳
+            if(i < nums.length - 1 && sum + nums[i] + (3 - path.size()) * nums[nums.length - 1] < target) {
+                continue;
+            }
+            // 2.之后的数字选够4个之后，最小都会比target大，则后续都不可能符合，直接return
+            if(i < nums.length - 1 && sum + nums[i] + (3 - path.size()) * nums[i + 1] > target){
                 return;
             }
+
             path.addLast(nums[i]);
-            // 下一轮从i+1开始
-            dfs(i + 1, nums, target - nums[i], path, res);
+            // 下一轮从i+1开始，累计值sum传下去
+            dfs(i + 1, nums, sum + nums[i], target, path, res);
             path.removeLast();
         }
     }
