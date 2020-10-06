@@ -1,6 +1,8 @@
 package leetcode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * leetcode 834
@@ -9,6 +11,10 @@ import java.util.Arrays;
  * 返回一个表示节点 i 与其他所有节点距离之和的列表 ans。
  */
 public class SumOfDistancesInTree {
+    List<List<Integer>> graph = new ArrayList<>();
+    int[] distSum;
+    int[] nodeSum;
+
     /**
      * floyd算法，空间会超出限制
      * @param N
@@ -48,10 +54,75 @@ public class SumOfDistancesInTree {
         }
         return ans;
     }
+
+    /**
+     * 树形dp，还不太理解
+     * @param N
+     * @param edges
+     * @return
+     */
+    public int[] sumOfDistancesInTree(int N, int[][] edges) {
+        // 邻接表
+        graph = new ArrayList<>();
+        // 距离和
+        distSum = new int[N];
+        // 以本节点为根的子树的节点个数（包括自己）
+        nodeSum = new int[N];
+        for(int i = 0; i < N; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] edge : edges){
+            int v1 = edge[0];
+            int v2 = edge[1];
+            graph.get(v1).add(v2);
+            graph.get(v2).add(v1);
+        }
+        Arrays.fill(nodeSum, 1);
+        postOrder(0, -1);
+        preOrder(0, -1);
+        return distSum;
+    }
+    /**
+     * 求root到子树所有节点的距离和，后序遍历
+     * @param root
+     * @param parent
+     */
+    private void postOrder(int root, int parent) {
+        List<Integer> neighbors = graph.get(root);
+        for(int neighbor : neighbors){
+            if(neighbor == parent){
+                // 邻接点是父节点则跳过
+                continue;
+            }
+            // 递归
+            postOrder(neighbor, root);
+            // 统计子节点的个数
+            nodeSum[root] += nodeSum[neighbor];
+            // 统计以root为根的子树的距离和
+            distSum[root] += distSum[neighbor] + nodeSum[neighbor];
+        }
+    }
+
+    /**
+     * 计算以root为根的树之外的距离和，前序遍历
+     * @param root
+     * @param parent
+     */
+    private void preOrder(int root, int parent) {
+        List<Integer> neighbors = graph.get(root);
+        for(int neighbor : neighbors){
+            if(neighbor == parent){
+                continue;
+            }
+            distSum[neighbor] = distSum[root] - nodeSum[neighbor] + (graph.size() - nodeSum[neighbor]);
+            preOrder(neighbor, root);
+        }
+    }
+
     public static void main(String[] args){
         int N = 6;
         int[][] edges = new int[][]{{0,1},{0,2},{2,3},{2,4},{2,5}};
-        int[] ans = new SumOfDistancesInTree().sumOfDistancesInTreeFloyd(N, edges);
+        int[] ans = new SumOfDistancesInTree().sumOfDistancesInTree(N, edges);
         System.out.println(Arrays.toString(ans));
     }
 }
