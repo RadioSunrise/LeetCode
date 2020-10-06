@@ -1,0 +1,57 @@
+package leetcode;
+
+import java.util.Arrays;
+
+/**
+ * leetcode 834
+ * 给定一个无向、连通的树。树中有 N 个标记为 0...N-1 的节点以及 N-1条边。
+ * 第 i 条边连接节点edges[i][0] 和 edges[i][1]。
+ * 返回一个表示节点 i 与其他所有节点距离之和的列表 ans。
+ */
+public class SumOfDistancesInTree {
+    /**
+     * floyd算法，空间会超出限制
+     * @param N
+     * @param edges
+     * @return
+     */
+    public int[] sumOfDistancesInTreeFloyd(int N, int[][] edges) {
+        int[] ans = new int[N];
+        // int[][] graph = new int[N][N];
+        int[][] floydDistance = new int[N][N];
+        for(int i = 0; i < N; i++){
+            Arrays.fill(floydDistance[i], Integer.MAX_VALUE / 2);
+            floydDistance[i][i] = 0;
+        }
+        for(int[] edge : edges){
+            int v1 = edge[0];
+            int v2 = edge[1];
+            floydDistance[v1][v2] = 1;
+            floydDistance[v2][v1] = 1;
+        }
+        // 主要循环的顺序，第一层循环是中间点k
+        for(int k = 0; k < N; k++){
+            for(int i = 0; i < N; i++){
+                for(int j = 0; j < N; j++){
+                    if(floydDistance[i][j] > floydDistance[i][k] + floydDistance[k][j]){
+                        floydDistance[i][j] = floydDistance[i][k] + floydDistance[k][j];
+                    }
+                }
+            }
+        }
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                if(i != j){
+                    ans[i] += floydDistance[i][j];
+                }
+            }
+        }
+        return ans;
+    }
+    public static void main(String[] args){
+        int N = 6;
+        int[][] edges = new int[][]{{0,1},{0,2},{2,3},{2,4},{2,5}};
+        int[] ans = new SumOfDistancesInTree().sumOfDistancesInTreeFloyd(N, edges);
+        System.out.println(Arrays.toString(ans));
+    }
+}
