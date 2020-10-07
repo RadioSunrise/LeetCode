@@ -16,6 +16,34 @@ public class SortColor {
      */
     public void sortColorsPointer(int[] nums) {
         int len = nums.length;
+        // 两个指针 p0 和 p2
+        int p0 = 0;
+        int p2 = len - 1;
+        // i 用于遍历数组
+        int i = 0;
+        // 终止条件是i 超过 p2
+        while (i <= p2){
+            // 等于0，放到前面去
+            if(nums[i] == 0){
+                // 把0放到p0的位置，放到前面
+                nums[i] = nums[p0];
+                nums[p0] = 0;
+                p0++;
+                i++;
+            }
+            // 等于1则继续前进
+            else if(nums[i] == 1){
+                i++;
+            }
+            // 等于2，把2放到后面
+            else if(nums[i] == 2){
+                // 获得nums[p2]的值
+                nums[i] = nums[p2];
+                nums[p2] = 2;
+                // i不要动，不知道这个是什么数
+                p2--;
+            }
+        }
     }
 
     /**
@@ -62,7 +90,7 @@ public class SortColor {
     public static void main(String[] args){
         int[] nums = new int[]{2,0,2,1,1,0};
         SortColor solution = new SortColor();
-        solution.sortPartition(nums);
+        solution.sortColorsPointer(nums);
         System.out.println(Arrays.toString(nums));
     }
 }
