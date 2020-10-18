@@ -60,3 +60,27 @@ class Solution {
         return dummy.next;
     }
 }
+
+/**
+ * 2020-10-18，fast指针走到最后一个节点（非null），slow指向要删的节点的前一个节点，slow和fast快n步
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+        // fast指针走n步
+        for(int i = 0; i < n; i++){
+            fast = fast.next;
+        }
+        // fast走到最后一个节点（非null）
+        while(fast.next != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        // slow指向的是要删除的节点的一个节点
+        slow.next = slow.next.next;
+        return dummy.next;
+    }
+}
