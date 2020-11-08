@@ -29,6 +29,28 @@ class Solution {
     }
 }
 
+// 二维dp数组
+class Solution {
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int[][] dp = new int[n][2];
+        // dp[i][0]表示前i天不持有股票的最大利润，dp[i][1]表示持有
+        // 因为可以无限买卖，转移方程
+        // dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + price[i]);
+        // dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - price[i]);
+        // base case
+        // dp[0][0] = 0, dp[0][1] = -price[0]，第一天交易结束的时候如果持有股票，那么收益则是-price[0]
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+        for(int i = 1; i < n; i++){
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i]);
+        }
+        // 最后一天不持有股票才是最大利润
+        return dp[n - 1][0];
+    }
+}
+
 // 因为k正无穷，所以也有其他的做法
 // 波峰波谷法
 // 因为可以无限次交易，所以每一段的波峰和波谷都要考虑
@@ -36,21 +58,18 @@ class Solution {
 class Solution {
     public int maxProfit(int[] prices) {
         int n = prices.length;
-        if(n == 0){
-            return 0;
-        }
-        int peak = prices[0];
-        int valley = prices[0];
         int i = 0;
+        // 找波峰和波谷
+        int valley = 0;
+        int peak = 0;
         int sum = 0;
         while(i < n - 1){
-            // 找valley，直到prices[i+1]>price[i]
-            while(i < n-1 && prices[i] >= prices[i + 1]){
+            // 找波谷
+            while(i < n - 1 && prices[i] >= prices[i + 1]){
                 i++;
             }
             valley = i;
-            // 继续出发，寻找波峰
-            // 找peak，直到prices[i+1]<price[i]
+            // 找波峰
             while(i < n - 1 && prices[i] <= prices[i + 1]){
                 i++;
             }
