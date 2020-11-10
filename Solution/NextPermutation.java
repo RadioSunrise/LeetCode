@@ -59,3 +59,50 @@ public class NextPermutation {
         System.out.println(Arrays.toString(nums));
     }
 }
+
+// 2020-11-10版本
+class Solution {
+    public void nextPermutation(int[] nums) {
+        // 下一个排列是比当前排列大的最小的数
+        // 完全升序的排列是最小的，所以除了完全逆序之外，肯定会有相邻顺序对
+        // 下一个排是比当前排列增幅最小的，因此要从后往前找顺序对
+        int n = nums.length;
+        // 先找到第一个顺序对
+        int i = n - 1;
+        while(i >= 1 && nums[i - 1] >= nums[i]){
+            i--;
+        }
+        // 没有顺序对，即nums为全逆序系列，reverse之后返回
+        if(i == 0)
+        {
+            reverse(nums, 0, n - 1);
+            return;
+        }
+        // 顺序对的小的数字要交换的“小数”
+        int small = nums[i - 1];
+        // 因为[i - 1, i]是顺序对的位置，从后往前找的，所以i到n-1都是逆序
+        // 从后往前找一个比小数大的最小的“大数”
+        int j = n - 1;
+        while(j >= i && nums[j] <= small){
+            j--;
+        }
+        // 交换“小数”和“大数”
+        swap(nums, i - 1, j);
+        // 交换之后，从i开始到n-1都要反序（反序之后i到末尾变成升序，才是最小的）
+        reverse(nums, i, n - 1);
+    }
+    public void swap(int[] nums, int x, int y){
+        int temp = nums[x];
+        nums[x] = nums[y];
+        nums[y] = temp;
+    }
+    public void reverse(int[] nums, int start, int end){
+        int j = end;
+        int i = start;
+        while(i < j){
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+}
