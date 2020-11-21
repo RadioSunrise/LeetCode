@@ -146,3 +146,76 @@ class Solution {
         return dummy.next;
     }
 }
+
+// 2020-11-21 更新另一种递归的写法，和数组排列类似，指定开始和结束的位置
+class Solution {
+    public ListNode sortList(ListNode head) {
+        return sortList(head, null);
+    }
+    /**
+    * 递归实现归并排序，指定head和tail（和数组排序一样，指定边界）
+    */
+    public ListNode sortList(ListNode head, ListNode tail){
+        // 空链则返回
+        if(head == null){
+            return head;
+        }
+
+        /*
+        if(tail == null){
+            System.out.println("call sort, head is " + head.val + ", tail is null");
+        }
+        else {
+            System.out.println("call sort, head is " + head.val + ", tail is " + tail.val);
+        }
+        */ 
+        
+        // 或者只有一个节点，
+        if(head.next == tail){
+            // 断开head，因为递归的传递是[head,mid), [mid,tail)
+            // 所以断开之后tail在后面不会丢，是null就直接置null也没问题
+            head.next = null;
+            return head;
+        }
+        // 快慢指针找到中间点mid
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != tail){
+            slow = slow.next;
+            fast = fast.next;
+            // fast走一步不为tail，再走一步
+            if(fast != tail){
+                fast = fast.next;
+            }
+        }
+        ListNode mid = slow;
+        // 分开排序再合并
+        ListNode list1 = sortList(head, mid);
+        ListNode list2 = sortList(mid, tail);
+        ListNode list = merge(list1, list2);
+        return list;
+    }
+    /**
+    * 合并两个有序链表，参数是两个头节点
+    */
+    public ListNode merge(ListNode head1, ListNode head2){
+        // System.out.println("call merge, head1 is " + head1.val + ", head2 is " + head2.val);
+        ListNode dummy = new ListNode(0);
+        ListNode temp1 = head1;
+        ListNode temp2 = head2;
+        ListNode temp = dummy;
+        while(temp1 != null && temp2 != null){
+            if(temp1.val <= temp2.val){
+                temp.next = temp1;
+                temp1 = temp1.next;
+            }
+            else {
+                temp.next = temp2;
+                temp2 = temp2.next;
+            }
+            temp = temp.next;
+        }
+        temp.next = (temp1 == null)? temp2 : temp1;
+        return dummy.next;
+    }
+}
