@@ -47,3 +47,30 @@ public class QueueReconstructionbyHeight {
         return queue.toArray(new int[n][2]);
     }
 }
+
+// 2020-11-21 (2020-11-16)更新
+class Solution {
+    public int[][] reconstructQueue(int[][] people){
+        int n = people.length;
+        // 先排序
+        // 不同身高按身高降序排，同身高按照k升序排
+        Arrays.sort(people, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if(o1[0] != o2[0]){
+                    return o2[0] - o1[0];
+                }
+                else {
+                    return o1[1] - o2[1];
+                }
+            }
+        });
+        // 用list的插入来实现向后“挤”
+        List<int[]> queue = new LinkedList<>();
+        for(int[] person : people){
+            // 按照排位k来插入，前面插入矮的也不会影响k
+            queue.add(person[1], person);
+        }
+        return queue.toArray(new int[n][2]);
+    }
+}
