@@ -78,3 +78,65 @@ public class RedundantConnection {
         System.out.println(edge[0] + " " + edge[1]);
     }
 }
+
+// 2021-1-13
+class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+        int n = edges.length;
+        int[] res = new int[2];
+        UnionFind unionFind = new UnionFind(n);
+        // 遍历边，如果两顶点已经是同一个类的，则该边是多余的
+        for(int [] edge : edges){
+            int v1 = edge[0];
+            int v2 = edge[1];
+            if(!unionFind.union(v1, v2)){
+                res[0] = v1;
+                res[1] = v2;
+                return res;
+            }
+        }
+        return res;
+    }
+    /**
+    * 并查集类
+    */
+    private class UnionFind{
+        /**
+        * parent 数组
+        */
+        private int[] parent;
+
+        public UnionFind(int n){
+            // 开多一个位置，因为顶点号从1开始
+            parent = new int[n + 1];
+            for(int i = 0; i < n; i++){
+                parent[i] = i;
+            }
+        }
+
+        /**
+        * 查找 + 路径压缩
+        */
+        public int find(int x){
+            if(x != parent[x]){
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+
+        /**
+        * 合并，如果已经在一个类了那就返回false
+        */
+        public boolean union(int x, int y){
+            int rootX = find(x);
+            int rootY = find(y);
+            if(rootX == rootY){
+                return false;
+            }
+            else {
+                parent[rootX] = rootY;
+            }
+            return true;
+        }
+    }
+}
