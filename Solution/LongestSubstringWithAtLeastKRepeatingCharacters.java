@@ -1,5 +1,5 @@
 // site: https://leetcode-cn.com/problems/longest-substring-with-at-least-k-repeating-characters/
-
+// reference: https://leetcode-cn.com/problems/longest-substring-with-at-least-k-repeating-characters/solution/xiang-jie-mei-ju-shuang-zhi-zhen-jie-fa-50ri1/
 // 和常规的双指针不同，不能直接操作，需要自己增加限定条件
 
 public class LongestSubstringWithAtLeastKRepeatingCharacters {
