@@ -40,3 +40,39 @@ class Solution {
     }
 }
 
+// 202103015
+public class SpiralMatrix {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        // 顺序访问，走完边界就要转向（可以代替边界的收缩）
+        // 增加 visited 记录访问位置
+        // 四个方向，右下左上
+        int[][] dirs = new int[][] {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int m = matrix.length;
+        int n = matrix[0].length;
+        boolean[][] visited = new boolean[m][n];
+        List<Integer> res = new ArrayList<>();
+        // 总个数 total
+        int total = m * n;
+        int row = 0;
+        int col = 0;
+        // 选方向
+        int dirIndex = 0;
+        // 0 到 total
+        for(int i = 0; i < total; i++){
+            res.add(matrix[row][col]);
+            visited[row][col] = true;
+            // 计算下一个位置，判断是否需要转向
+            int nextRow = row + dirs[dirIndex][0];
+            int nextCol = col + dirs[dirIndex][1];
+            // 越界或者访问判断
+            if(nextRow < 0 || nextRow >= m || nextCol < 0 || nextCol >= n || visited[nextRow][nextCol]){
+                // 转向
+                dirIndex = (dirIndex + 1) % 4;
+            }
+            // 计算下一个位置
+            row += dirs[dirIndex][0];
+            col += dirs[dirIndex][1];
+        }
+        return res;
+    }
+}
